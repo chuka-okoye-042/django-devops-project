@@ -13,7 +13,8 @@ COPY . /app/
 
 # Install dependencies with retries and timeout
 RUN pip install --retries 10 --timeout 120 --upgrade pip
-RUN pip install --retries 10 --timeout 120 -r requirements.txt
+RUN pip install --retries 10 --timeout 120 -i https://pypi.org/simple -r requirements.txt
+
 
 # Collect static files (if needed)
 RUN mkdir -p /app/static
