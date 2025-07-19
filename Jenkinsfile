@@ -3,7 +3,6 @@ pipeline {
 
   environment {
     IMAGE_NAME = "chuka042/django-devops-project"
-    DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
   }
 
   stages {
@@ -15,27 +14,29 @@ pipeline {
 
     stage('Build Docker Image') {
       steps {
-        sh 'docker build -t $IMAGE_NAME .'
+        bat "docker build -t %IMAGE_NAME% ."
       }
     }
 
     stage('Push to DockerHub') {
       steps {
-        sh """
-          echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-          docker push $IMAGE_NAME
-        """
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          bat """
+          echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+          docker push %IMAGE_NAME%
+          """
+        }
       }
     }
 
     stage('Post Build') {
       steps {
-        echo "Docker image pushed: $IMAGE_NAME"
+        echo "Docker image pushed: ${env.IMAGE_NAME}"
       }
     }
   }
 
   triggers {
-    pollSCM('H/2 * * * *')  // ✅ Poll GitHub every 2 minutes
+    pollSCM('H/2 * * * *') // Poll GitHub every 2 minutes
   }
 }
