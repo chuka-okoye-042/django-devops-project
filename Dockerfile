@@ -13,7 +13,8 @@ COPY . /app/
 
 # Install dependencies
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --retries 10 --timeout 60 -r requirements.txt
+
 
 # Collect static files (if needed)
 RUN mkdir -p /app/static
