@@ -1,0 +1,9 @@
+{
+  "DEBUG": true,
+  "SECRET_KEY": "your-secret-key-here",
+  "ALLOWED_HOSTS": ["*"],
+  "DATABASE": {
+    "ENGINE": "django.db.backends.sqlite3",
+    "NAME": "db.sqlite3"
+  }
+}
